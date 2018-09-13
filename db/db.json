@@ -1,0 +1,25 @@
+{
+  "code": [
+    {
+      "title": "我是标题js",
+      "type": "js",
+      "date": "2018-09-13",
+      "content": "<pre><code>我是标题js</code></pre><p><br></p>",
+      "id": 2
+    },
+    {
+      "title": "我是标题css",
+      "type": "css",
+      "date": "2018-09-13",
+      "content": "<pre><code>我是标题js</code></pre><pre><code>我是标题css</code></pre><pre><code>if($title.val() == ''){<br>            $.amAlert.toast({<br>              content:'标题不能为空',<br>              theme:'danger'<br>            })<br>            return;<br>          }</code></pre><p><br></p>",
+      "id": 3
+    },
+    {
+      "title": "jQuery addClass example",
+      "type": "html",
+      "date": "2018-09-13",
+      "content": "<pre><code>&lt;div class=\"am-modal-footer\"&gt;<br>          &lt;span class=\"am-modal-btn\" data-am-modal-cancel&gt;取消&lt;/span&gt;<br>          &lt;span class=\"am-modal-btn\" data-am-modal-confirm&gt;确定&lt;/span&gt;<br>        &lt;/div&gt;</code></pre><p><br></p>",
+      "id": 4
+    }
+  ]
+}

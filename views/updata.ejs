@@ -1,0 +1,165 @@
+<% include ./head %>
+  <body>   
+    <% include ./nav %>
+    <div id="app" class="am-g am-g-fixed">
+      <% include ./breadcrumb %>
+      <form class="am-form">
+        <fieldset>
+          <div class="am-form-group">
+            <label for="doc-ipt-title">标题</label>
+            <input type="text" class="" id="title" placeholder="输入标题">
+          </div>
+          <div class="am-form-group">
+            <label for="doc-select-1">类型</label>
+            <select id="type">
+              <option value="js" selected>js</option>
+              <option value="css">css</option>
+              <option value="html">html</option>
+            </select>
+            <span class="am-form-caret"></span>
+          </div>
+          <div class="am-form-group">
+            <label for="doc-ta-1">文本内容</label>
+            <div id="editor"></div>
+          </div>
+          <p>
+            <button type="button" class="am-btn am-btn-secondary am-round" id="submit">保存</button>
+            <button type="button" class="am-btn am-btn-default am-round" id="goBack">返回</button>
+          </p>
+        </fieldset>
+      </form>      
+    </div>
+    <script src="/js/wangEditor.min.js"></script>
+    <script>
+    (function () {
+
+      var $title = $("#title");
+      var $type = $("#type");
+      var $submit = $("#submit");
+      var $editorArea = $("#editor");
+      var $goBack = $("#goBack");
+      var editor;
+      var $id;
+
+      function main() {
+        //todo 实现整个项目的入口函数
+        ReaderBaseFrame();
+        EventHanlder();
+      }
+
+      function newDate() {
+          //取目前时间
+          var startDate = new Date();
+          var stratY = startDate.getFullYear(); 
+          var stratM = startDate.getMonth() + 1;
+          var startD = startDate.getDate();
+          stratM = stratM < 10 ? ('0' + stratM) : stratM;
+          startD = startD < 10 ? ('0' + startD) : startD; 
+          var newDate = stratY+'-'+stratM+'-'+startD;
+          return newDate;
+      }
+
+      function ReaderBaseFrame() {
+        //todo 渲染基本的UI结构
+
+
+        getUrlId(); //获取id
+        getData();  //请求数据
+
+      }
+
+      function getUrlId(){
+        var url = window.location.href;
+        url = url.replace(/^http:\/\/[^/]+/, "");
+        var addr = url.substr(url.lastIndexOf('/', url.lastIndexOf('/') - 1) + 1);
+        var index = addr.lastIndexOf("\/");
+        //js 获取字符串中最后一个斜杠后面的内容
+        $id = decodeURI(addr.substring(index + 1, addr.length));
+      }
+
+      function getData() {
+        //根据url的id请求数据
+        $.AMUI.progress.start();
+        $.ajax({
+          url: '/api/code',
+          type: 'GET',
+          data: {id: $id},
+        })
+        .done(function(res) {
+          $.AMUI.progress.done();
+          $title.val(res[0].title);
+          $type.val(res[0].type);
+          $editorArea.html(res[0].content);
+          var E = window.wangEditor;
+          editor = new E('#editor');
+          editor.create()
+        })
+        .fail(function(res) {
+          $.AMUI.progress.done();
+          //请求失败
+          $.amAlert.toast({
+            content:'添加失败,可能网络原因，请稍后再试',
+            theme:'danger'
+          })
+        })
+        
+      }
+
+      function EventHanlder() {
+        //todo 交互的事件绑定
+       
+        $submit.click(function(event) {
+
+          //标题不能为空
+          if($title.val() == ''){
+            $.amAlert.toast({
+              content:'标题不能为空',
+              theme:'danger'
+            })
+            return;
+          }
+
+          var date = newDate();
+
+          $.AMUI.progress.start();
+          //ajax添加数据
+          $.ajax({
+            url: '/api/code/'+$id,
+            type: 'put',
+            data: {
+              title: $title.val(),
+              type: $type.val(),
+              date: date,
+              content: editor.txt.html()
+            }
+          })
+          .done(function(res) {
+
+            $.AMUI.progress.done();
+            //添加成功
+            $.amAlert.toast({
+              content:'更新成功'
+            })
+          })
+          .fail(function(res) {
+
+            $.AMUI.progress.done();
+            //请求失败
+            $.amAlert.toast({
+              content:'添加失败,可能网络原因，请稍后再试',
+              theme:'danger'
+            })
+          })
+
+        });
+
+        $goBack.click(function(event) {
+          window.location="/"
+        });
+      } 
+      main();      
+    
+    })()   
+    </script>
+  </body>
+</html>

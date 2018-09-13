@@ -1,0 +1,13 @@
+/* Write your styles */
+
+.am-alert-panel {
+	position: fixed;
+	max-width: 1000px;
+	top: 10%;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.am-alert-panel .am-alert {
+	min-width: 300px;
+}
