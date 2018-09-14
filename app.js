@@ -6,14 +6,9 @@ const app = express();
 
 //引入、使用路由
 var indexRouter = require('./routes/index');
-app.use('/', indexRouter);//使用路由
+app.use('/', indexRouter);
 
-//使用art-template作为模板,设置html结尾为模板文件
-// app.engine('html', require('express-art-template'));
-// app.set('view options', {
-//     debug: process.env.NODE_ENV !== 'production'
-// });
-
+//使用ejs模板引擎
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
